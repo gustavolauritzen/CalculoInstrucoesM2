@@ -309,7 +309,9 @@ bool reordenar1InstForwarding(LDE <string>& listaOriginal, No<string>*& atual) {
 }
 
 bool reordenar1Inst(LDE <string>& listaOriginal, No<string>*& atual) {
-
+	if (verificaInstrucao(atual->info) == "J") {
+		return false;
+	}
 	int startRd = 20, endRd = 24;
 	int startRs1 = 12, endRs1 = 16;
 	int startRs2 = 7, endRs2 = 11;
@@ -440,11 +442,11 @@ bool reordenar2Inst(LDE <string>& listaOriginal, No<string>*& atual) {
 	No<string>* atualanterior1 = new No<string>;
 	No<string>* instBoa1 = new No<string>;
 	No<string>* instBoa2 = new No<string>;
-	string retornoAuxAnterior1 = "", retornoAuxAnterior2 = "", retornoAux = "", auxRs1 = "", auxRs2 = "";
-	bool percorrerLista = true;
+	string retornoAuxAnterior1 = "", retornoAuxAnterior2 = "", retornoAux = "", auxRs1 = "", auxRs2 = "", atualRd = "", atualAnterior1Rd = "";
 	instBoa1->info = "";
 	instBoa2->info = "";
 	if (atual != nullptr) {
+		atualRd = atual->info.substr(startRd, endRd - startRd + 1);
 		if (atual->eloP != nullptr) {
 			atualproximo1 = atual->eloP;
 			if (atual->eloP->eloP != nullptr) {
@@ -457,9 +459,11 @@ bool reordenar2Inst(LDE <string>& listaOriginal, No<string>*& atual) {
 		}
 		if (atual->eloA != nullptr) {
 			atualanterior1 = atual->eloA;
+			atualAnterior1Rd = atualanterior1->info.substr(startRd, endRd - startRd + 1);
 		}
 	}
-	do {
+	
+	while (aux->eloP != nullptr) {
 		auxRs1 = aux->info.substr(startRs1, endRs1 - startRs1 + 1);
 		auxRs2 = aux->info.substr(startRs2, endRs2 - startRs2 + 1);
 
@@ -499,7 +503,7 @@ bool reordenar2Inst(LDE <string>& listaOriginal, No<string>*& atual) {
 						if (atual != nullptr) {
 							if (atualanterior1 != nullptr) {
 								//verifica os anteriores do atual(conflito) para ver se nao ira gerar problema
-								if ((auxRs1 != atual->info.substr(startRd, endRd - startRd + 1) && (auxRs2 != atual->info.substr(startRd, endRd - startRd + 1))) && ((auxRs1 != atualanterior1->info.substr(startRd, endRd - startRd + 1)) && (auxRs2 != atualanterior1->info.substr(startRd, endRd - startRd + 1)))) {
+								if ((auxRs1 != atual->info.substr(startRd, endRd - startRd + 1)) && (auxRs2 != atual->info.substr(startRd, endRd - startRd + 1)) && ((auxRs1 != atualanterior1->info.substr(startRd, endRd - startRd + 1)) && (auxRs2 != atualanterior1->info.substr(startRd, endRd - startRd + 1)))) {
 									//verifica os proximos do atual(conflito) para ver se nao ira gerar problema
 									if (atualproximo1 != nullptr) {
 										if ((auxRs1 != atualproximo1->info.substr(startRd, endRd - startRd + 1)) && (auxRs2 != atualproximo1->info.substr(startRd, endRd - startRd + 1))) {
@@ -545,7 +549,7 @@ bool reordenar2Inst(LDE <string>& listaOriginal, No<string>*& atual) {
 						if (atual != nullptr) {
 							if (atualanterior1 != nullptr) {
 								//verifica os anteriores do atual(conflito) para ver se nao ira gerar problema
-								if ((auxRs1 != atual->info.substr(startRd, endRd - startRd + 1)) && (auxRs1 != atualanterior1->info.substr(startRd, endRd - startRd + 1))) {
+								if ((auxRs1 != atualRd) && (auxRs1 != atualAnterior1Rd)) {
 									//verifica os proximos do atual(conflito) para ver se nao ira gerar problema
 									if (atualproximo1 != nullptr) {
 										if (auxRs1 != atualproximo1->info.substr(startRd, endRd - startRd + 1)) {
@@ -584,8 +588,7 @@ bool reordenar2Inst(LDE <string>& listaOriginal, No<string>*& atual) {
 		}
 
 		aux = aux->eloP;
-
-	}while (aux != nullptr);
+	}
 
 
 	if (instBoa1->info != "") {
@@ -760,7 +763,6 @@ void solucao3(LDE <string>& listaOriginal) {
 					}
 				}
 			}
-
 
 			if (retornoAux == "IAE" || retornoAux == "U" || retornoAux == "IM" || retornoAux == "R") {
 				if (auxproximo1 != nullptr) {
