@@ -651,20 +651,6 @@ void solucao4(LDE <string>& listaOriginal) {
 				continue;
 			}
 
-			if (auxproximo1 != nullptr) {
-				if (retornoInst1 == "J") {
-					if (reordenar1InstForwarding(listaOriginal, aux)) {
-						aux = aux->eloP;
-						continue;
-					}
-					else {
-						insere1Nop(listaOriginal, aux);
-						aux = aux->eloP;
-						continue;
-					}
-				}
-			}
-
 			if (retornoAux == "IM") {
 				if (auxproximo1 != nullptr) {
 					if ((retornoInst1 == "B") || (retornoInst1 == "S") || (retornoInst1 == "R")) {
@@ -871,14 +857,6 @@ void solucao2(LDE <string>& listaOriginal) {
 			if (retornoAux == "NOP") {
 				aux = aux->eloP;
 				continue;
-			}
-
-			if (auxproximo1 != nullptr) {
-				if (retornoInst1 == "J") {
-					insere1Nop(listaOriginal, aux);
-					aux = aux->eloP;
-					continue;
-				}
 			}
 
 			if (retornoAux == "IM") {
